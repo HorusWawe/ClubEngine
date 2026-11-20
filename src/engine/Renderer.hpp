@@ -26,7 +26,7 @@ private:
  std::vector<VkFramebuffer> framebuffers_; VkCommandPool commandPool_{VK_NULL_HANDLE}; std::vector<VkCommandBuffer> commands_;
  VkPipelineLayout pipelineLayout_{VK_NULL_HANDLE}; VkPipeline pipeline_{VK_NULL_HANDLE};
  VkBuffer vertexBuffer_{VK_NULL_HANDLE}; VkDeviceMemory vertexMemory_{VK_NULL_HANDLE}; uint32_t vertexCount_{0};
- static constexpr uint32_t FramesInFlight=2; VkSemaphore imageAvailable_[FramesInFlight]{},renderFinished_[FramesInFlight]{};
+ static constexpr uint32_t FramesInFlight=1; VkSemaphore imageAvailable_[FramesInFlight]{}; std::vector<VkSemaphore> presentReady_;
  VkFence inFlight_[FramesInFlight]{}; uint32_t frame_{0},imageIndex_{0}; bool frameStarted_{false};
 };
 }
