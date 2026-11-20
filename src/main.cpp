@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <SDL3/SDL.h>
+#include <string>
 
 int main() {
     try {
@@ -13,8 +14,13 @@ int main() {
     } catch (const std::exception& e) {
         const std::string message = std::string("ClubEngine startup failed:\n") + e.what() +
             "\n\nSee ClubEngine.log next to the executable for the last initialization stage.";
+        std::string logPath = "ClubEngine.log";
+        if (const char* base = SDL_GetBasePath()) {
+            logPath = std::string(base) + "ClubEngine.log";
+            SDL_free(const_cast<char*>(base));
+        }
         {
-            std::ofstream log("ClubEngine.log", std::ios::app);
+            std::ofstream log(logPath, std::ios::app);
             log << "MAIN FATAL: " << e.what() << std::endl;
         }
         std::cerr << message << std::endl;
