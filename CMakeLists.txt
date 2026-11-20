@@ -1,9 +1,11 @@
+
 cmake_minimum_required(VERSION 3.24)
-project(ClubEngine VERSION 0.1.0 LANGUAGES CXX)
+project(ClubEngine VERSION 0.3.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Vulkan REQUIRED)
+find_program(GLSLC glslc HINTS "$ENV{VULKAN_SDK}/Bin" "$ENV{VULKAN_SDK}/bin" REQUIRED)
 include(FetchContent)
 set(SDL_SHARED OFF CACHE BOOL "" FORCE)
 set(SDL_STATIC ON CACHE BOOL "" FORCE)
@@ -12,7 +14,17 @@ FetchContent_Declare(SDL3 GIT_REPOSITORY https://github.com/libsdl-org/SDL.git G
 FetchContent_MakeAvailable(SDL3)
 FetchContent_Declare(glm GIT_REPOSITORY https://github.com/g-truc/glm.git GIT_TAG 1.0.1 GIT_SHALLOW TRUE)
 FetchContent_MakeAvailable(glm)
+set(SHADER_OUTPUTS)
+foreach(SHADER scene.vert scene.frag)
+ add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/shaders/${SHADER}.spv"
+  COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/shaders"
+  COMMAND ${GLSLC} "${CMAKE_CURRENT_SOURCE_DIR}/shaders/${SHADER}" -o "${CMAKE_CURRENT_BINARY_DIR}/shaders/${SHADER}.spv"
+  DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/shaders/${SHADER}" VERBATIM)
+ list(APPEND SHADER_OUTPUTS "${CMAKE_CURRENT_BINARY_DIR}/shaders/${SHADER}.spv")
+endforeach()
+add_custom_target(ClubEngineShaders DEPENDS ${SHADER_OUTPUTS})
 add_executable(ClubEngine src/main.cpp src/engine/Application.cpp src/engine/Window.cpp src/engine/Renderer.cpp src/engine/Camera.cpp src/engine/Scene.cpp)
+add_dependencies(ClubEngine ClubEngineShaders)
 target_include_directories(ClubEngine PRIVATE src)
 target_link_libraries(ClubEngine PRIVATE SDL3::SDL3-static Vulkan::Vulkan glm::glm)
 target_compile_definitions(ClubEngine PRIVATE GLM_FORCE_RADIANS GLM_FORCE_DEPTH_ZERO_TO_ONE CLUBENGINE_VERSION="${PROJECT_VERSION}")

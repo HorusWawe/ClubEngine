@@ -1,3 +1,4 @@
+
 name: ClubEngine Windows Build
 on:
   push:
@@ -23,8 +24,9 @@ jobs:
       - name: Package
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          New-Item -ItemType Directory -Force -Path dist/shaders | Out-Null
           Copy-Item build/Release/ClubEngine.exe dist/
+          Copy-Item build/shaders/*.spv dist/shaders/
           Compress-Archive -Path dist/* -DestinationPath ClubEngine-Windows-x64.zip -Force
       - uses: actions/upload-artifact@v4
         with:
