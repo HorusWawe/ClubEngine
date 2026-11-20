@@ -22,7 +22,7 @@ private:
  VkQueue graphicsQueue_{VK_NULL_HANDLE},presentQueue_{VK_NULL_HANDLE}; uint32_t graphicsFamily_{0},presentFamily_{0};
  VkSwapchainKHR swapchain_{VK_NULL_HANDLE}; VkFormat swapFormat_{VK_FORMAT_UNDEFINED}; VkExtent2D extent_{};
  std::vector<VkImage> images_; std::vector<VkImageView> views_; VkRenderPass renderPass_{VK_NULL_HANDLE};
- VkImage depthImage_{VK_NULL_HANDLE}; VkDeviceMemory depthMemory_{VK_NULL_HANDLE}; VkImageView depthView_{VK_NULL_HANDLE};
+ VkFormat depthFormat_{VK_FORMAT_UNDEFINED}; VkImage depthImage_{VK_NULL_HANDLE}; VkDeviceMemory depthMemory_{VK_NULL_HANDLE}; VkImageView depthView_{VK_NULL_HANDLE};
  std::vector<VkFramebuffer> framebuffers_; VkCommandPool commandPool_{VK_NULL_HANDLE}; std::vector<VkCommandBuffer> commands_;
  VkPipelineLayout pipelineLayout_{VK_NULL_HANDLE}; VkPipeline pipeline_{VK_NULL_HANDLE};
  VkBuffer vertexBuffer_{VK_NULL_HANDLE}; VkDeviceMemory vertexMemory_{VK_NULL_HANDLE}; uint32_t vertexCount_{0};
